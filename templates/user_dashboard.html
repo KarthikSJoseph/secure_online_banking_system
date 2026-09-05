@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>User Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container">
+    <a class="navbar-brand" href="#">MyBank</a>
+    <div class="d-flex">
+      <span class="navbar-text me-3">Hello, {{ user.name }}</span>
+      <a class="btn btn-outline-light" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container my-4">
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card p-3 shadow-sm">
+        <h5>Account</h5>
+        <p><strong>Account:</strong> {{ user.account_number }}</p>
+        <p><strong>Balance:</strong> ₹{{ user.balance }}</p>
+        <p><strong>FD:</strong> ₹{{ user.fd_amount }}</p>
+        <p><strong>Loan:</strong> ₹{{ user.loan_amount }}</p>
+      </div>
+
+      <div class="card p-3 shadow-sm mt-3">
+        <h5>Deposit</h5>
+        <form method="post" action="{{ url_for('deposit') }}">
+          <input class="form-control mb-2" name="amount" placeholder="Amount" required>
+          <input class="form-control mb-2" name="remark" placeholder="Remark (optional)">
+          <button class="btn btn-success w-100">Deposit</button>
+        </form>
+      </div>
+
+      <div class="card p-3 shadow-sm mt-3">
+        <h5>Withdraw</h5>
+        <form method="post" action="{{ url_for('withdraw') }}">
+          <input class="form-control mb-2" name="amount" placeholder="Amount" required>
+          <input class="form-control mb-2" name="remark" placeholder="Remark (optional)">
+          <button class="btn btn-danger w-100">Withdraw</button>
+        </form>
+      </div>
+
+    </div>
+
+    <div class="col-md-6">
+      <div class="card p-3 shadow-sm">
+        <h5>Recent Transactions</h5>
+        <div class="table-responsive">
+          <table class="table table-sm table-striped">
+            <thead><tr><th>Type</th><th>Amount</th><th>Remark</th><th>Date</th></tr></thead>
+            <tbody>
+              {% for t in txs %}
+                <tr>
+                  <td>{{ t.type }}</td>
+                  <td>₹{{ t.amount }}</td>
+                  <td>{{ t.remark }}</td>
+                  <td>{{ t.date }}</td>
+                </tr>
+              {% else %}
+                <tr><td colspan="4" class="text-center">No transactions yet</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>
